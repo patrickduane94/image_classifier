@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Classifier</title>
+</head>
+<body>
+<p>
+This image classifier is trained to recognize feline and canine species.
+    Uploaded images are categorized as cat, dog, or wild — where cat and dog refer to typical domestic pets, and wild refers to non-domesticated feline or canine species like lions or wolves.
+For best results, use close-up images that show the animal's face clearly. Images of other species or poor quality photos cannot be accurately categorized.
+</p>
+    <h2>Upload an Image</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <input type="submit" value="Classify">
+    </form>
+
+    {% if prediction %}
+        <h3>Probability:</h3>
+            <ul>
+            {% for label, prob in probability.items() %}
+                <li>{{ label }}: {{ '%.2f' | format(prob * 100) }}%</li>
+            {% endfor %}
+            </ul>
+        <h3>Prediction: {{ prediction }}</h3>
+        <img src="{{ image_url }}" alt="Uploaded image" width="300">
+    {% endif %}
+</body>
+</html>
