@@ -97,7 +97,9 @@ For best results, use close-up images that show the animal's face clearly. Image
 
         {% if prediction %}
             <h3>Prediction: {{ prediction }}</h3>
-            <img src="{{ image_url }}" height="250"><br>
+            {% if image_data %}
+                <img src="data:image/jpeg;base64,{{ image_data }}" alt="Uploaded image" height="250">
+            {% endif %}
             <h3 style="margin-bottom: 0;">Probability:</h3>
             <ul style="display: inline-block; text-align: left; padding-left: 20px;">
             {% for label, prob in probability.items() %}
