@@ -28,6 +28,7 @@
         }
         .tab-content.active {
             display: block;
+            background-color: #fdfdfd;
         }
         h1{
             color: white;
@@ -53,6 +54,20 @@
             outline: 3px solid #FFCC00;
             box-shadow: 0 0 10px #FFCC00;
         }
+        .classify-button {
+            background-color: green;
+            color: white;
+            padding: 5px;
+            border: none;
+            font-size: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .classify-button:hover {
+            background-color: #006400;
+        }
     </style>
 </head>
 <body>
@@ -70,14 +85,14 @@
 
 <div id="classify" class="tab-content active">
     <p>This image classifier is trained to recognize <strong>faces</strong> of feline and canine species.
-    Uploaded images are classified as <strong>cat</strong>, <strong>dog</strong>, or <strong>wild</strong> — where cat and dog refer to typical domestic pets, and wild refers to non-domesticated feline or canine species like lions or wolves.
+    Uploaded images are classified as <strong>cat</strong>, <strong>dog</strong>, or <strong>wild</strong> — where <i>cat</i> and <i>dog</i> refer to typical domestic pets, and <i>wild</i> refers to non-domesticated feline or canine species like lions or wolves.
 For best results, use close-up images that show the animal's face clearly. Images of other species or poor quality photos cannot be accurately classified.
         Upload an image below and click "Classify" to run it through a convolutional neural network (CNN) that will predict whether the animal is a cat, dog, or wild species.
 </p>
     <div style="text-align: center;">
         <form method="POST" enctype="multipart/form-data">
             <input type="file" name="image" accept="image/*" required>
-            <input type="submit" value="Classify">
+             <button type="submit" class="classify-button">Classify</button>
         </form>
 
         {% if prediction %}
@@ -100,7 +115,7 @@ For best results, use close-up images that show the animal's face clearly. Image
     The <a href="https://www.kaggle.com/datasets/andrewmvd/animal-faces" target="_blank">dataset</a> used to train and test was downloaded from Kaggle. It contains around 16,000 images of faces of wild and
     domesticated cat and dog species. Before training, the images were resized to 128x128 pixels to preserve detail while also
     keeping computational cost relatively low. </p>
-    <p>There are three convolutional layers which use 3x3 filters, each doubling the number of features learned in the previous layer (32->64->128).
+    <p>There are three convolutional layers which use 3x3 filters, each doubling the number of features learned in the previous layer (32,64,128).
     Training went on for 10 epochs using cross-entropy loss and the Adam optimizer, which combines momentum and adaptive learning rates to improve training efficiency during backpropagation.
     The model achieved approximately 99% training accuracy and 96% validation accuracy. The plot below shows training and validation accuracy and loss over time.</p>
     <div style="text-align: center;">
