@@ -2,29 +2,100 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Image Classifier</title>
+    <title>Animal Classifier</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .tab {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 5px;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            cursor: pointer;
+        }
+        .tab.active {
+            background-color: white;
+            border-top: 2px solid #007bff;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: white;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        h1{
+            text-align: center;
+        }
+        input:focus {
+            outline: 3px solid #FFCC00;
+            box-shadow: 0 0 10px #FFCC00;
+        }
+    </style>
 </head>
 <body>
-<p>
-This image classifier is trained to recognize feline and canine species.
-    Uploaded images are categorized as cat, dog, or wild — where cat and dog refer to typical domestic pets, and wild refers to non-domesticated feline or canine species like lions or wolves.
-For best results, use close-up images that show the animal's face clearly. Images of other species or poor quality photos cannot be accurately categorized.
+
+<h1>Feline & Canine Image Classifier</h1>
+
+<div>
+    <div class="tab active" onclick="showTab('classify')">Classify</div>
+    <div class="tab" onclick="showTab('training')">Training & Performance</div>
+</div>
+
+<div id="classify" class="tab-content active">
+    <p>This image classifier is trained to recognize <strong>faces</strong> of feline and canine species.
+    Uploaded images are classified as <strong>cat</strong>, <strong>dog</strong>, or <strong>wild</strong> — where cat and dog refer to typical domestic pets, and wild refers to non-domesticated feline or canine species like lions or wolves.
+For best results, use close-up images that show the animal's face clearly. Images of other species or poor quality photos cannot be accurately classified.
+        Upload an image below and click "Classify" to run it through a convolutional neural network (CNN) that will predict whether the animal is a cat, dog, or wild species.
 </p>
-    <h2>Upload an Image</h2>
     <form method="POST" enctype="multipart/form-data">
         <input type="file" name="image" accept="image/*" required>
         <input type="submit" value="Classify">
     </form>
 
     {% if prediction %}
-        <h3>Probability:</h3>
-            <ul>
-            {% for label, prob in probability.items() %}
-                <li>{{ label }}: {{ '%.2f' | format(prob * 100) }}%</li>
-            {% endfor %}
-            </ul>
-        <h3>Prediction: {{ prediction }}</h3>
-        <img src="{{ image_url }}" alt="Uploaded image" width="300">
+        <h2>Prediction: {{ prediction }}</h2>
+        <img src="{{ image_url }}" width="300"><br>
+        <h3>Probabilities:</h3>
+        <ul>
+        {% for label, prob in probability.items() %}
+            <li>{{ label }}: {{ '%.2f' | format(prob * 100) }}%</li>
+        {% endfor %}
+        </ul>
+    {% elif error_message %}
+        <p style="color: red;">{{ error_message }}</p>
     {% endif %}
+</div>
+
+<div id="training" class="tab-content">
+    <p>This image classifier is a convolutional neural network developed with the PyTorch framework for deep learning.
+    The <a href="https://www.kaggle.com/datasets/andrewmvd/animal-faces" target="_blank">dataset</a> used to train and test was downloaded from Kaggle. It contains around 16,000 images of faces of wild and
+    domesticated cat and dog species. Before training, the images were resized to 128x128 pixels to preserve detail while also
+    keeping computational cost relatively low. </p>
+    <p>There are three convolutional layers which use 3x3 filters, each doubling the number of features learned in the previous layer (32->64->128).
+    Training went on for 10 epochs using cross-entropy loss and the Adam optimizer, which combines momentum and adaptive learning rates to improve training efficiency during backpropagation.
+    The model achieved approximately 99% training accuracy and 96% validation accuracy. The plot below shows training and validation accuracy and loss over time.</p>
+    <div style="text-align: center;">
+        <img src="{{ url_for('static', filename='cnn.png') }}" alt="Training Plot" width="900">
+    </div>
+</div>
+
+<script>
+    function showTab(tabId) {
+        const tabs = document.querySelectorAll('.tab');
+        const contents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => tab.classList.remove('active'));
+        contents.forEach(content => content.classList.remove('active'));
+
+        document.querySelector(`.tab[onclick*="${tabId}"]`).classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+    }
+</script>
+
 </body>
 </html>
