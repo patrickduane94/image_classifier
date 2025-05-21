@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <title>Animal Classifier</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: black;}
         .tab {
             display: inline-block;
             padding: 10px 20px;
             margin-right: 5px;
-            background-color: #eee;
+            background-color: green;
             border: 1px solid #ccc;
             border-bottom: none;
             cursor: pointer;
         }
         .tab.active {
             background-color: white;
+            color: green;
             border-top: 2px solid #007bff;
             font-weight: bold;
         }
@@ -29,7 +30,24 @@
             display: block;
         }
         h1{
-            text-align: center;
+            color: white;
+            display: inline-block;
+            margin: 0;
+        }
+        .outlined-text {
+          color: white;
+          font-family: Arial, sans-serif;
+          font-size: 30px;
+          text-align: center;
+          text-shadow:
+            1px 0 green,    /* right */
+           -1px 0 green,    /* left */
+            0 1px green,    /* bottom */
+            0 -1px green,   /* top */
+            1px 1px green,  /* bottom-right */
+           -1px -1px green, /* top-left */
+            1px -1px green, /* top-right */
+           -1px 1px green;  /* bottom-left */
         }
         input:focus {
             outline: 3px solid #FFCC00;
@@ -39,7 +57,11 @@
 </head>
 <body>
 
-<h1>Feline & Canine Image Classifier</h1>
+<div style="text-align: center;">
+  <h1 class="outlined-text">
+      Feline & Canine Image Classifier
+  </h1>
+</div>
 
 <div>
     <div class="tab active" onclick="showTab('classify')">Classify</div>
@@ -52,23 +74,25 @@
 For best results, use close-up images that show the animal's face clearly. Images of other species or poor quality photos cannot be accurately classified.
         Upload an image below and click "Classify" to run it through a convolutional neural network (CNN) that will predict whether the animal is a cat, dog, or wild species.
 </p>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="image" accept="image/*" required>
-        <input type="submit" value="Classify">
-    </form>
+    <div style="text-align: center;">
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*" required>
+            <input type="submit" value="Classify">
+        </form>
 
-    {% if prediction %}
-        <h2>Prediction: {{ prediction }}</h2>
-        <img src="{{ image_url }}" width="300"><br>
-        <h3>Probabilities:</h3>
-        <ul>
-        {% for label, prob in probability.items() %}
-            <li>{{ label }}: {{ '%.2f' | format(prob * 100) }}%</li>
-        {% endfor %}
-        </ul>
-    {% elif error_message %}
-        <p style="color: red;">{{ error_message }}</p>
-    {% endif %}
+        {% if prediction %}
+            <h3>Prediction: {{ prediction }}</h3>
+            <img src="{{ image_url }}" height="250"><br>
+            <h3 style="margin-bottom: 0;">Probability:</h3>
+            <ul style="display: inline-block; text-align: left; padding-left: 20px;">
+            {% for label, prob in probability.items() %}
+                <li>{{ label }}: {{ '%.2f' | format(prob * 100) }}%</li>
+            {% endfor %}
+            </ul>
+        {% elif error_message %}
+            <p style="color: red;">{{ error_message }}</p>
+        {% endif %}
+    </div>
 </div>
 
 <div id="training" class="tab-content">
